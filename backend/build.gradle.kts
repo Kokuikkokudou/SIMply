@@ -1,8 +1,8 @@
 plugins {
     id("org.springframework.boot") version "3.4.4"
     id("io.spring.dependency-management") version "1.1.4"
-    kotlin("jvm")
-    kotlin("plugin.spring")
+    kotlin("jvm") version "1.9.23"
+    kotlin("plugin.spring") version "1.9.23"
 }
 
 java.sourceCompatibility = JavaVersion.VERSION_21

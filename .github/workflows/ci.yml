@@ -24,7 +24,9 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: gradle
       - name: Build & Test
-        run: ./gradlew build
+        run: |
+          cd backend
+          ./gradlew build
 
   frontend:
     runs-on: ubuntu-latest
