@@ -1,0 +1,48 @@
+name: sim-app-ci
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+
+env:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+  NODE_VERSION: "22"
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ "21", "17" ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4   # ← v4 が最新 :contentReference[oaicite:0]{index=0}
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+          cache: gradle
+      - name: Build & Test
+        run: ./gradlew build
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4   # Node 用公式アクション :contentReference[oaicite:1]{index=1}
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+      - run: |
+          cd frontend
+          npm ci
+          npm run lint
+          npm test -- --watchAll=false
+          npm run build
+      - name: Upload dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-dist
+          path: frontend/dist

@@ -1,0 +1,20 @@
+services:
+  db:
+    image: mysql:8.0.42            # 8.4 ではなく安定版 8.0 系
+    container_name: mysql8
+    environment:
+      MYSQL_ROOT_PASSWORD: local-root-pass
+      MYSQL_DATABASE: simdb
+      MYSQL_USER: simuser
+      MYSQL_PASSWORD: simpass
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      retries: 5
+
+volumes:
+  db-data:
